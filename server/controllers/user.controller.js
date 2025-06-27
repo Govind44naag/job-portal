@@ -14,12 +14,12 @@ export const register = async (req, res) => {
                 success: false,
             });
         }
-        
+
         const file = req.file
         const fileUri = getDataUri(file)
         const cloudResponse = await cloudinary.uploader.upload(fileUri.content)
         const existingUser = await User.findOne({ email });
-     
+
         if (existingUser) {
             return res.status(400).json({
                 message: "User already exists with this email.",
@@ -39,17 +39,17 @@ export const register = async (req, res) => {
                 profilePhoto: cloudResponse.secure_url,
             }
         });
-       
+
         return res.status(200).json({
             message: 'Account created successfully',
             success: true,
         });
 
     } catch (e) {
-       
+
         console.error(e);
         res.status(500).json({ message: 'Internal server error' });
-        
+
     }
 };
 
@@ -107,7 +107,12 @@ export const login = async (req, res) => {
         };
 
         return res.status(200)
-            .cookie('token', token, { maxAge:  24*60*60*1000, httpOnly: true, sameSite: 'strict' })
+            .cookie('token', token, {
+                maxAge: 24 * 60 * 60 * 1000,
+                httpOnly: true,
+                sameSite: 'None',
+                secure: true
+            })
             .json({
                 message: `Welcome back ${user.fullName}`,
                 success: true,
