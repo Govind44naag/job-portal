@@ -29,7 +29,7 @@ const CompanyCreate = () => {
                 navigate(`/admin/companies/${companyId}`)
             }
         } catch (e) {
-            toast.error(e?.response?.data?.message || "Something went wrong!")
+            toast.error(e?.response?.data?.message  )
         }
     }
 
