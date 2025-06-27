@@ -39,7 +39,7 @@ const Navbar = () => {
                     </h1>
                 </div>
                 <div className="flex items-center gap-8">
-                    <ul className="flex font-medium items-center gap-6 text-gray-700">
+                    <ul className="flex font-medium items-center gap-6 text-white">
                         {user && user.role === 'recruiter' ? (
                             <>
                                 <li>
