@@ -15,7 +15,7 @@ const FILTERS = {
     "Backend Developer",
     "Full-Stack Developer",
   ],
-  Salary: ["0-40k", "1-2 LPA", "2-5 LPA"],
+   
 };
 
 const FilterCard = () => {
