@@ -15,23 +15,27 @@ const CompanyCreate = () => {
     const [companyName, setCompanyName] = useState('')
     const dispatch = useDispatch()
 
-    const registerNewCompany = async () => {
-        try {
-            axios.post(`${COMPANY_API_END_POINT}/register`, { companyName }, {
-  headers: { 'Content-Type': 'application/json' },
-  withCredentials: true,  
-});
+const registerNewCompany = async () => {
+  try {
+    const res = await axios.post(`${COMPANY_API_END_POINT}/register`, { companyName }, {
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true,
+    });
 
-            if (res?.data?.success) {
-                dispatch(setSingleCompany(res.data.company))
-                toast.success(res.data.message)
-                const companyId = res?.data?.company?._id
-                navigate(`/admin/companies/${companyId}`)
-            }
-        } catch (e) {
-            toast.error(e?.response?.data?.message  )
-        }
+    if (res?.data?.success) {
+      dispatch(setSingleCompany(res.data.company));
+      toast.success(res.data.message);
+      const companyId = res?.data?.company?._id;
+      navigate(`/admin/companies/${companyId}`);
+    } else {
+      toast.error(res?.data?.message || "Something went wrong!");
     }
+
+  } catch (e) {
+    console.error("Register company error:", e);
+    toast.error(e?.response?.data?.message || "Something went wrong!");
+  }
+}
 
     return (
         <div className="min-h-screen bg-gradient-to-tr from-indigo-50 to-purple-100 dark:from-gray-900 dark:to-gray-800">
