@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow
 } from '../ui/table'
-import {Button} from '../ui/button'
+import { Button } from '../ui/button'
 import React, { useEffect, useState } from 'react'
 import { Avatar } from '../ui/avatar'
 import { Popover, PopoverContent, PopoverTrigger } from '@radix-ui/react-popover'
@@ -66,8 +66,9 @@ const CompaniesTable = () => {
                   {company.name}
                 </TableCell>
                 <TableCell className="text-gray-600 dark:text-gray-400">
-                  {company?.createAt ? company.createAt.split('T')[0] : 'N/A'}
+                  {company?.createdAt ? company.createdAt.split('T')[0] : 'N/A'}
                 </TableCell>
+
                 <TableCell className="text-right">
                   <Popover>
                     <PopoverTrigger className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
