@@ -42,9 +42,8 @@ const Login = () => {
 
       if (res.data.success) {
         dispatch(setUser(res.data.user));
-        navigate("/");
-
         toast.success(res.data.message);
+         navigate("/");
       }
     } catch (e) {
       toast.error(e.response?.data?.message || "Something went wrong");
