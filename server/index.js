@@ -20,12 +20,29 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
 
+// trust proxy for secure cookies behind Vercel/Proxies
+app.set('trust proxy', 1)
+
+// Allow multiple origins (local + Vercel). Set CLIENT_ORIGINS as comma-separated list.
+const allowedOrigins = (process.env.CLIENT_ORIGINS || 'http://localhost:5173')
+  .split(',')
+  .map(o => o.trim())
+  .filter(Boolean)
+
 const corsOptions = {
-    origin: 'https://placement-portal-topaz-three.vercel.app',  
-    credentials: true,
-};
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true)
+    }
+    return callback(new Error('Not allowed by CORS'))
+  },
+  credentials: true,
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization']
+}
 
 app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
 
 const Port=process.env.Port ||3000
 
