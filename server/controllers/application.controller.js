@@ -1,6 +1,7 @@
 import {Application} from '../models/application.model.js'
 import {Job} from '../models/job.model.js'
-
+import { User } from '../models/user.model.js'
+import { sendStatusEmail } from '../utils/mailer.js'
 export const applyJob=async(req,res)=>{
     try{
         const userId=req.id
@@ -98,34 +99,65 @@ export const getApplicants=async(req,res)=>{
     }
 }
 
-export const updateStatus=async(req,res)=>{
-    try{
-        const {status}=req.body
-        const applicationId=req.params.id
-        if(!status){
-            return res.status(400).json({
-                message:"Status not found!",
-                success:false,
-            })
-        }
-        //find application by applicant id
-        const application=await Application.findOne({_id:applicationId})
-        if(!application){
-            return res.status(404).json({
-                message:"Application  not found!",
-                success:false,
-            })
-        }
-        //update status
-        application.status=status.toLowerCase()
-        await application.save()
+export const updateStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const applicationId = req.params.id;
 
-        return res.status(200).json({
-            message:"Status updated successfully!",
-            success:true,
+    if (!status) {
+      return res.status(400).json({
+        message: "Status not found!",
+        success: false,
+      });
+    }
+
+    const application = await Application.findById(applicationId)
+      .populate("applicant", "fullName email") // ✅ get applicant email + name
+      .populate("job", "title");               // ✅ get job title
+
+    if (!application) {
+      return res.status(404).json({
+        message: "Application not found!",
+        success: false,
+      });
+    }
+
+    application.status = status.toLowerCase();
+    await application.save();
+
+    // ✅ check email is available
+    if (!application.applicant?.email) {
+      return res.status(400).json({
+        message: "Applicant email not found in database!",
+        success: false,
+      });
+    }
+    const user = await User.findById(req.id)
+    if(!user){
+        console.log("user not found !")
+        return res.status(404).json({
+            message:"user not found!",
+            success:false,
         })
     }
-    catch(e){
-        console.log(e)
-    }
-}
+    //  send email
+    await sendStatusEmail(
+      application.applicant.email,
+      application.job.title,
+      status,
+      user
+    );
+
+    return res.status(200).json({
+      message: `Application ${status} & Email sent successfully`,
+      success: true,
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Server error",
+      success: false,
+    });
+  }
+};

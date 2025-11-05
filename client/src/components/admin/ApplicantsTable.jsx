@@ -67,9 +67,16 @@ const ApplicantsTable = () => {
                         <PopoverContent className='w-32'>
                             {
                                 shortListingStatus.map((status, index) => (
-                                    <div  onClick={()=>statusHandler(status,item?._id)} key={index} className='flex w-fit items-center my-2 cursor-pointer'>
-                                        <span>{status}</span>
-                                    </div>
+                                   <button  onClick={() => statusHandler(status, item?._id)}  key={index}
+                       className={`flex w-fit items-center my-2 px-3 py-1 rounded cursor-pointer border transition-all ${status === "Accepted"
+                                  ? "border-green-600 text-green-700 hover:bg-green-200 active:bg-green-600 active:text-white"
+                                    : "border-red-600 text-red-700 hover:bg-red-200 active:bg-red-600 active:text-white"
+                   }
+                        `}
+>
+  <span>{status}</span>
+</button>
+
                                 ))
                             }
                         </PopoverContent>

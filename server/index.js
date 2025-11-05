@@ -24,7 +24,7 @@ app.use(cookieParser())
 app.set('trust proxy', 1)
 
 // Allow multiple origins (local + Vercel). Set CLIENT_ORIGINS as comma-separated list.
-const allowedOrigins = (process.env.CLIENT_ORIGINS || 'http://localhost:5173')
+const allowedOrigins = ( process.env.CLIENT_ORIGINS || 'http://localhost:5173')
   .split(',')
   .map(o => o.trim())
   .filter(Boolean)
