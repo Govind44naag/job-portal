@@ -43,7 +43,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 app.options('*', cors(corsOptions))
-const Port=process.env.Port ||3000
+const PORT=process.env.PORT ||3000
 
 
 //api's
@@ -55,5 +55,5 @@ app.use('/api/v1/application',applicationRoute)
 
 
 app.listen(Port,()=>{
-    console.log(`Server is Running on Port number ${Port}`)//``this sign  is called tample literal
+    console.log(`Server is Running on Port number ${PORT}`)//``this sign  is called tample literal
 })
