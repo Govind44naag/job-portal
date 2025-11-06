@@ -112,8 +112,8 @@ export const updateStatus = async (req, res) => {
     }
 
     const application = await Application.findById(applicationId)
-      .populate("applicant", "fullName email") // ✅ get applicant email + name
-      .populate("job", "title");               // ✅ get job title
+      .populate("applicant", "fullName email") 
+      .populate("job", "title");                
 
     if (!application) {
       return res.status(404).json({
