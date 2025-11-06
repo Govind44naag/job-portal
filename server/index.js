@@ -54,6 +54,6 @@ app.use('/api/v1/application',applicationRoute)
 //jj
 
 
-app.listen(Port,()=>{
+app.listen(PORT,()=>{
     console.log(`Server is Running on Port number ${PORT}`)//``this sign  is called tample literal
 })
