@@ -148,18 +148,22 @@ export const updateStatus = async (req, res) => {
                 success: false,
             })
         }
-        //  send email
-        await sendStatusEmail(
-            application.applicant.email,
-            application.job.title,
-            status,
-            user,
-            application.job.company    // ✅ pass company details
-        );
+        //  send email (do not fail status update if email times out)
+        try {
+            await sendStatusEmail(
+                application.applicant.email,
+                application.job.title,
+                status,
+                user,
+                application.job.company
+            );
+        } catch (emailError) {
+            console.error('Email send failed:', emailError?.message || emailError);
+        }
 
 
         return res.status(200).json({
-            message: `Application ${status} & Email sent successfully`,
+            message: `Application ${status} & Email processed`,
             success: true,
         });
 

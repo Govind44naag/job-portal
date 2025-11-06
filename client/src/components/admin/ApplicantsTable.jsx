@@ -23,7 +23,8 @@ const ApplicantsTable = () => {
             }
         }
         catch(e){
-            toast.error(e.response.data.message)
+            const msg = (e && e.response && e.response.data && e.response.data.message) ? e.response.data.message : (e && e.message ? e.message : 'Something went wrong');
+            toast.error(msg)
         }
     }
     return (
