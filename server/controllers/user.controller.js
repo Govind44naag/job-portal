@@ -107,17 +107,19 @@ export const login = async (req, res) => {
         };
 
         return res.status(200)
-            .cookie('token', token, {
-                maxAge: 24 * 60 * 60 * 1000,
-                httpOnly: true,
-                sameSite: 'None',
-                secure: true
-            })
-            .json({
-                message: `Welcome back ${user.fullName}`,
-                success: true,
-                user: userData
-            });
+        .cookie('token', token, {
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: 'none',   // lowercase
+        secure: true,       // required for production HTTPS
+        path: '/',          // allow cookie everywhere
+        })
+    .json({
+        message: `Welcome back ${user.fullName}`,
+        success: true,
+        user: userData
+    });
+
 
     } catch (e) {
         console.error(e);

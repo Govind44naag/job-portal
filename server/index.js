@@ -43,7 +43,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 app.options('*', cors(corsOptions))
-
 const Port=process.env.Port ||3000
 
 
