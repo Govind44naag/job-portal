@@ -14,30 +14,24 @@ const Applicants = () => {
     const {applicants}=useSelector(store=>store.application)
     
  
-    useEffect(()=>{
-
-        const fetchAllApplicants=async()=>{
-            
-            try{
-                const res=await axios.get(`${APPLICATION_API_END_POINT}/${params.id}/applicants`,
-                    {withCredentials:true}
-                )
-                   dispatch(setAllApplicants(res.data.job))
-                  //if no page is shownd everything is white then remove dispatch
-             
-            }
-            catch(e){
-                console.error(e)
-            }
+    const fetchAllApplicants = async () => {
+        try {
+            const res = await axios.get(`${APPLICATION_API_END_POINT}/${params.id}/applicants`, { withCredentials: true })
+            dispatch(setAllApplicants(res.data.job))
+        } catch (e) {
+            console.error(e)
         }
+    }
+
+    useEffect(() => {
         fetchAllApplicants()
-    },[])
+    }, [params.id])
   return (
     <div>
         <Navbar/>
         <div className='max-w-7xl mx-auto'>
             <h1 className='font-bold my-5'>Applicants {applicants?.application?.length}</h1>
-            <ApplicantsTable/>
+            <ApplicantsTable onStatusUpdated={fetchAllApplicants}/>
 
         </div>
     </div>

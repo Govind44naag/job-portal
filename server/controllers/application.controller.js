@@ -1,7 +1,7 @@
 import { Application } from '../models/application.model.js'
 import { Job } from '../models/job.model.js'
 import { User } from '../models/user.model.js'
-import { sendStatusEmail } from '../utils/mailer.js'
+
 export const applyJob = async (req, res) => {
     try {
         const userId = req.id
@@ -130,40 +130,33 @@ export const updateStatus = async (req, res) => {
             });
         }
 
-        application.status = status.toLowerCase();
-        await application.save();
-
-        // ✅ check email is available
-        if (!application.applicant?.email) {
-            return res.status(400).json({
-                message: "Applicant email not found in database!",
-                success: false,
-            });
-        }
+      
         const user = await User.findById(req.id)
         if (!user) {
-            console.log("user not found !")
             return res.status(404).json({
-                message: "user not found!",
+                message: "User not found!",
                 success: false,
             })
         }
-        //  send email (do not fail status update if email times out)
-        try {
-            await sendStatusEmail(
-                application.applicant.email,
-                application.job.title,
-                status,
-                user,
-                application.job.company
-            );
-        } catch (emailError) {
-            console.error('Email send failed:', emailError?.message || emailError);
+
+        // Normalize status to match schema enum: 'pending' | 'accepted' | 'rejected'
+        const normalizedStatus = status.toLowerCase()
+        const allowedStatuses = ['pending', 'accepted', 'rejected']
+        if (!allowedStatuses.includes(normalizedStatus)) {
+            return res.status(400).json({
+                message: "Invalid status. Use accepted or rejected.",
+                success: false,
+            })
         }
 
+        application.status = normalizedStatus
+        await application.save()
+
+        // Optionally notify applicant by email (don't fail the request if email fails)
+      
 
         return res.status(200).json({
-            message: `Application ${status} & Email processed`,
+            message: `Application ${status}`,
             success: true,
         });
 

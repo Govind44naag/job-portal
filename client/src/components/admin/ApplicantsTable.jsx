@@ -10,20 +10,20 @@ import { toast } from 'sonner'
 const shortListingStatus = ['Accepted', 'Rejected']
 
 
-const ApplicantsTable = () => {
+const ApplicantsTable = ({ onStatusUpdated }) => {
     const { applicants } = useSelector(store => store.application)
-     const statusHandler=async(status,id)=>{
-       
-        try{
-             axios.defaults.withCredentials=true
-            const res=await axios.post(`${APPLICATION_API_END_POINT}/status/${id}/update`,{status})
+    const statusHandler = async (status, id) => {
+        try {
+            axios.defaults.withCredentials = true
+            const res = await axios.post(`${APPLICATION_API_END_POINT}/status/${id}/update`, { status }, { withCredentials: true })
 
-            if(res.data.success){
+            if (res.data.success) {
                 toast.success(res.data.message)
+                onStatusUpdated?.()
             }
-        }
-        catch(e){
-            const msg = (e && e.response && e.response.data && e.response.data.message) ? e.response.data.message : (e && e.message ? e.message : 'Something went wrong');
+        } catch (e) {
+            
+            const msg = (e?.response?.data?.message) ?? e?.message ?? 'Network error'
             toast.error(msg)
         }
     }
@@ -38,7 +38,7 @@ const ApplicantsTable = () => {
                         <TableHead>Email</TableHead>
                         <TableHead>Contact</TableHead>
                         <TableHead>Resume</TableHead>
-                        <TableHead></TableHead>
+                        <TableHead>Date</TableHead>
                         <TableHead className='text-right '>Action</TableHead>
 
                     </TableRow>
